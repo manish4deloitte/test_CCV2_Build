@@ -3,25 +3,23 @@ name: CCV2 Build and Deploy
 on:
   workflow_dispatch:
     inputs:
-      branch_name_or_tag:
-        description: "Branch name or tag"
+      targetEnvironment:
+        description: "Target Environment"
         required: true
-        type: string
-        default: "main"
-      environment:
-        description: "Environment to deploy"
-        required: true
-        type: string
+        type: choice 
         default: d1
+        options: 
+        - d1
+        - s1
       systemUpdate:
-        description: 'System Update'
+        description: 'Platform Update Mode'
         required: true
-        default: 'None'
+        default: 'No migration required'
         type: choice
         options:
-        - none
-        - update
-      deployMode:
+        - No migration required
+        - Migrate data
+      deploymentMode:
         description: 'Deployment Mode'
         required: true
         default: 'Rolling Update'
@@ -29,13 +27,17 @@ on:
         options:
         - Rolling Update
         - Recreate
+
+env:
+  AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+  SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
+  
+
+  
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
     - name: Setup Java
       uses: actions/setup-java@v3
       with:
@@ -52,3 +54,6 @@ jobs:
        echo ${{ inputs.branch_name_or_tag }}
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deployMode }}
+
+
+// Add environment variables for Authorization token and subscription code
