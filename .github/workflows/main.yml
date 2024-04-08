@@ -44,7 +44,13 @@ jobs:
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deploymentMode }}
 
-
+    - name: Request Approval (if s1 environment)
+      uses: actions/github-script@v6
+      with:
+        script: |
+            if (context.inputs.targetEnvironment === 's1') {
+              core.setFailed('Approval required for s1 environment deployment!');
+            }
     - name: Microsoft Teams Notifications
       uses: gor918/ms-teams-card-action@main
       with:
