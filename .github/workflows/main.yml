@@ -38,22 +38,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Setup Java
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: 11
-        
-    - name: Set up Maven
-      uses: stCarolas/setup-maven@v4.4
-      with:
-        maven-version: 3.8.2
     - name: Print values
       run: |
        echo ${{ inputs.environment }}
        echo ${{ inputs.branch_name_or_tag }}
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deployMode }}
-
-
-// Add environment variables for Authorization token and subscription code
