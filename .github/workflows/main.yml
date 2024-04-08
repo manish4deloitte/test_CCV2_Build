@@ -40,7 +40,6 @@ jobs:
     steps:
     - name: Print values
       run: |
-       echo ${{ inputs.environment }}
-       echo ${{ inputs.branch_name_or_tag }}
+       echo ${{ inputs.targetEnvironment }}
        echo ${{ inputs.systemUpdate }}
-       echo ${{ inputs.deployMode }}
+       echo ${{ inputs.deploymentMode }}
