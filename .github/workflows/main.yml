@@ -11,7 +11,6 @@ on:
         options: 
         - d1
         - s1
-      -p1
       systemUpdate:
         description: 'Platform Update Mode'
         required: true
@@ -47,7 +46,7 @@ jobs:
 
 
     - name: Microsoft Teams Notifications
-      uses: gor918/ms-teams-card-action@main
+      uses: gor918/ms-teams-card-action@main1
       with:
         github-token: ${{ github.token }}
         ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
