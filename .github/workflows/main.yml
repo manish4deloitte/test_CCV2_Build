@@ -49,7 +49,11 @@ jobs:
       uses: gor918/ms-teams-card-action@main
       with:
         github-token: ${{ github.token }}
-        ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URIL }}
-        notification-summary: Your custom notification message 
+        ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+        notification-summary: CCV2 Build 
         notification-color: 17a2b8
         timezone: Europe/Bucharest
+
+    - name: Hello world
+      run: |
+        echo hello world
