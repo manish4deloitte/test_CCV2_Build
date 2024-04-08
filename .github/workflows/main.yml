@@ -49,26 +49,15 @@ jobs:
       run: |
         echo ::set-output name=target_env_var ${{ inputs.targetEnvironment }}
 
-    - name: Microsoft Teams Notifications
-      uses: gor918/ms-teams-card-action@main
+    - name: Microsoft Teams Notification
+      uses: skitionek/notify-microsoft-teams@master
+      if: always()
       with:
-        github-token: ${{ github.token }}
-        ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-        notification-summary: CCV2 Build 
-        notification-color: 17a2b8
-        timezone: Europe/Bucharest
+          webhook_url: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+          overwrite: "{title: `Overwrote title in ${workflow_link}`}"
 
-    - name: Hello world
-      run: |
-        echo hello world
-  approval:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Request Approval (if s1 environment)
-        uses: actions/github-script@v6
-        with:
-          script: |
-            target_env=${{ needs.build.outputs.target_env_var }}
-            if (target_env === 's1') {
-              core.setFailed('Approval required for s1 environment deployment!');
-            }
+    - name: Microsoft Teams Notification
+      uses: skitionek/notify-microsoft-teams@master
+      if: failure()
+      with:
+        webhook_url: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
