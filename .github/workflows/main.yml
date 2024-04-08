@@ -11,6 +11,7 @@ on:
         options: 
         - d1
         - s1
+      -p1
       systemUpdate:
         description: 'Platform Update Mode'
         required: true
