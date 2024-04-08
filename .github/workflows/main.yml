@@ -13,15 +13,22 @@ on:
         required: true
         type: string
         default: d1
-      logLevel:
-        description: 'Log level'
+      systemUpdate:
+        description: 'System Update'
         required: true
-        default: 'warning'
+        default: 'None'
         type: choice
         options:
-        - info
-        - warning
-        - debug
+        - none
+        - update
+      deployMode:
+        description: 'Deployment Mode'
+        required: true
+        default: 'Rolling Update'
+        type: choice
+        options:
+        - Rolling Update
+        - Recreate
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,3 +50,5 @@ jobs:
       run: |
        echo ${{ inputs.environment }}
        echo ${{ inputs.branch_name_or_tag }}
+       echo ${{ inputs.systemUpdate }}
+       echo ${{ inputs.deployMode }}
