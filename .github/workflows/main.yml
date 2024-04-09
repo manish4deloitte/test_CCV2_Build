@@ -50,14 +50,12 @@ jobs:
         echo ::set-output name=target_env_var ${{ inputs.targetEnvironment }}
 
     - name: Microsoft Teams Notification
-      uses: skitionek/notify-microsoft-teams@master
-      if: always()
+      uses: jdcargile/ms-teams-notification@v1.4
       with:
-          webhook_url: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          overwrite: "{title: `Overwrote title in ${workflow_link}`}"
-
-    - name: Microsoft Teams Notification
-      uses: skitionek/notify-microsoft-teams@master
-      if: failure()
-      with:
-        webhook_url: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+          notification-summary: Github CCV2 - Build# ${{github.run_number}} for ${{github.repository}}. 
+          notification-color: 17a2b8
+          timezone: America/Denver
+          verbose-logging: true
+       
