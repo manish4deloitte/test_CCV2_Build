@@ -54,7 +54,7 @@ jobs:
       with:
           github-token: ${{ github.token }} # this will use the runner's token.
           ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          notification-summary: Github CCV2 - Build# ${{github.run_number}} for ${{github.repository}}. 
+          notification-summary: Github CCV2 Build for ${{ inputs.targetEnvironment }} environment.
           notification-color: 17a2b8
           timezone: America/Denver
           verbose-logging: true
