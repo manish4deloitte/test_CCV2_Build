@@ -43,14 +43,7 @@ jobs:
        echo ${{ inputs.targetEnvironment }}
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deploymentMode }}
-    - name: Send email
-      uses: cinotify/github-action@main
-      with:
-        to: 'kmanishkundanbhai@deloitte.com'
-        subject: 'Test CCV2 Mail'
-        body: '<em>This is a notification from GitHub actions for CCV2 Build.</em>'
-        type: 'text/html'
-   
+       
     - name: Microsoft Teams Notification
       uses: jdcargile/ms-teams-notification@v1.4
       with:
@@ -60,4 +53,20 @@ jobs:
           notification-color: 17a2b8
           timezone: America/Denver
           verbose-logging: true
-       
+  deployDev:
+    name: Deploy to Dev
+    runs-on: ubuntu-latest
+    needs: [build]
+    environment:
+      name: development
+      url: 'http://mylocal.com'
+    steps:
+    - name: Deploy to Dev
+      run: echo This id dev deploy  
+    - name: Send email
+      uses: cinotify/github-action@main
+      with:
+        to: 'kmanishkundanbhai@deloitte.com'
+        subject: 'Test CCV2 Mail dev deploy section'
+        body: '<em>This is a notification from GitHub actions for CCV2 Build.</em>'
+        type: 'text/html'
