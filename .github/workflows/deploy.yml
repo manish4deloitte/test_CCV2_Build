@@ -49,6 +49,7 @@ jobs:
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deploymentMode }}
        getBuildURL="${{ env.CCV2_BUILD_URL }}/${{ env.BUILD_CODE }}"
+       echo "Build URL: $getBuildURL"
        buildData=$(curl --location --request GET "getBuildURL" -H "Authorization: Bearer ${{env.AUTH_TOKEN}}" -H 'Content-Type: application/json') 
        echo $buildData
        buildStatus=$(echo "$buildData" | jq -r '.status')
