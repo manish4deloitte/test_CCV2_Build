@@ -48,7 +48,7 @@ jobs:
        echo ${{ inputs.targetEnvironment }}
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deploymentMode }}
-       buildData = $(curl --location --request GET "$CCV2_BUILD_URL/${{ env.BUILD_CODE }}" -H "Authorization: Bearer ${{env.AUTH_TOKEN}}" -H 'Content-Type: application/json')  
+       buildData=$(curl --location --request GET "$CCV2_BUILD_URL/${{ env.BUILD_CODE }}" -H "Authorization: Bearer ${{env.AUTH_TOKEN}}" -H 'Content-Type: application/json')  
        buildStatus=$(echo "$buildData" | jq -r '.status')
 
        echo "BUILD_STATUS=$buildStatus" >> $GITHUB_ENV
