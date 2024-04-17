@@ -44,16 +44,10 @@ jobs:
     steps:
     - name: Check if build is successfully done or not in CCV2 using API and then only deploy
       run: |
-       echo ${{ inputs.buildCode }}
-       echo ${{ inputs.targetEnvironment }}
-       echo ${{ inputs.systemUpdate }}
-       echo ${{ inputs.deploymentMode }}
-       
        getBuildURL="${{ env.CCV2_BUILD_URL }}/${{ env.BUILD_CODE }}"
-       echo "Build URL: $getBuildURL"
+       
        buildData=$(curl --location --request GET "$getBuildURL" -H "Authorization: Bearer ${{env.AUTH_TOKEN}}" -H 'Content-Type: application/json') 
-       echo $buildData
        buildStatus=$(echo "$buildData" | jq -r '.status')
-
+       echo "Build Status before env : $buildStatus"
        echo "BUILD_STATUS=$buildStatus" >> $GITHUB_ENV
        echo "Build Status: ${{ env.BUILD_STATUS }}"
