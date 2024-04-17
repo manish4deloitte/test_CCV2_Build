@@ -35,7 +35,7 @@ on:
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
   SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
-  
+  CCV2_BUILD_URL : https://portalrotapi.hana.ondemand.com/v2/subscriptions/${{ secrets.SUBSCRIPTION_CODE }}/builds
 
   
 jobs:
@@ -44,24 +44,12 @@ jobs:
     steps:
     - name: Check if build is successfully done or not in CCV2 using API and then only deploy
       run: |
+       echo ${{ inputs.buildCode }}
        echo ${{ inputs.targetEnvironment }}
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deploymentMode }}
-       
-  deployDev:
-    name: Deploy to Dev
-    runs-on: ubuntu-latest
-    needs: [build]
-    environment:
-      name: development
-      url: 'http://mylocal.com'
-    steps:
-    - name: Deploy to Dev
-      run: echo This id dev deploy  
-    - name: Send email
-      uses: cinotify/github-action@main
-      with:
-        to: 'kmanishkundanbhai@deloitte.com'
-        subject: 'Test CCV2 Mail dev deploy section'
-        body: '<em>This is a notification from GitHub actions for CCV2 Build.</em>'
-        type: 'text/html'
+       buildData = $(curl --location --request GET "$CCV2_BUILD_URL/${{ env.BUILD_CODE }}" -H "Authorization: Bearer ${{env.AUTH_TOKEN}}" -H 'Content-Type: application/json')  
+       buildStatus=$(echo "$buildData" | jq -r '.status')
+
+       echo "BUILD_STATUS=$buildStatus" >> $GITHUB_ENV
+       echo "Build Status: ${{ env.BUILD_STATUS }}"
