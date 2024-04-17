@@ -50,4 +50,8 @@ jobs:
        buildStatus=$(echo "$buildData" | jq -r '.status')
        echo "Build Status before env : $buildStatus"
        echo "BUILD_STATUS=$buildStatus" >> $GITHUB_ENV
+       
+
+    - name: Print build status
+      run: |
        echo "Build Status: ${{ env.BUILD_STATUS }}"
