@@ -35,8 +35,8 @@ on:
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
   SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
-  CCV2_BUILD_URL : https://portalrotapi.hana.ondemand.com/v2/subscriptions/${{ secrets.SUBSCRIPTION_CODE }}/builds
-
+  CCV2_BUILD_URL: https://portalrotapi.hana.ondemand.com/v2/subscriptions/${{ secrets.SUBSCRIPTION_CODE }}/builds
+  BUILD_CODE: ${{ inputs.buildCode }}
   
 jobs:
   build:
@@ -48,6 +48,7 @@ jobs:
        echo ${{ inputs.targetEnvironment }}
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deploymentMode }}
+       
        getBuildURL="${{ env.CCV2_BUILD_URL }}/${{ env.BUILD_CODE }}"
        echo "Build URL: $getBuildURL"
        buildData=$(curl --location --request GET "getBuildURL" -H "Authorization: Bearer ${{env.AUTH_TOKEN}}" -H 'Content-Type: application/json') 
