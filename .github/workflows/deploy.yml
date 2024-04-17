@@ -54,4 +54,8 @@ jobs:
 
     - name: Print build status
       run: |
-       echo "Build Status: ${{ env.BUILD_STATUS }}"
+       if [[ ${{ env.BUILD_STATUS }} == 'SUCCESS' ]]; then
+            echo "Hello world! It is success and we can deploy"
+          else
+            echo "Failure!"
+          fi
