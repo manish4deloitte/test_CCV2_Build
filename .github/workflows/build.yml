@@ -1,7 +1,8 @@
 name: CCV2 Build
 
 on:
-  workflow_dispatch
+  pull_request_review:
+    types: [submitted]
     
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
@@ -10,6 +11,11 @@ env:
 
   
 jobs:
+  approved:
+    if: github.event.review.state == 'APPROVED'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This PR was approved"
   build:
     runs-on: ubuntu-latest
     steps:
