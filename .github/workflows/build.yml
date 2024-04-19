@@ -11,6 +11,10 @@ env:
 
   
 jobs:
+  one:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "hello world"
   approved:
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
