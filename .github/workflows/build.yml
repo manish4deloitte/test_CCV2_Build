@@ -24,56 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Backend Build 
-      run: |
-       BRANCH=${GITHUB_REF##*/}
-       echo "BRANCH: ${BRANCH}"
-       echo "========================================================================"
-       echo "     Starting CCV2 build from $BRANCH, avg completion time: 15 min      "
-       echo "========================================================================"
-       BUILD_NAME=$(echo R1_`date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)
-       BUILD_CODE=$(curl -s -X POST -H "Authorization: Bearer $AUTH_TOKEN" "https://portalrotapi.hana.ondemand.com/v2/subscriptions/$SUBSCRIPTION_CODE/builds" -H 'Content-Type: application/json' -d '{"branch":"'$BRANCH'","name":"'$BUILD_NAME'"}' | jq ".code" | awk 'NR==1 {print substr($1,2,10)}')
-       i=1
-       BUILD_STATUS=$(curl -s -X GET -H "Authorization: Bearer $AUTH_TOKEN" "https://portalrotapi.hana.ondemand.com/v2/subscriptions/$SUB_CODE/builds/$BUILD_CODE" | jq ".status" | awk 'NR==1 {print $1}')
-       while [ "$BUILD_STATUS" = "null" ] && [ $i -ne 5 ]
-       do
-           sleep 60
-           BUILD_CODE=$(curl -s -X POST -H "Authorization: Bearer $AUTH_TOKEN" "https://portalrotapi.hana.ondemand.com/v2/subscriptions/$SUBSCRIPTION_CODE/builds" -H 'Content-Type: application/json' -d '{"branch":"'$BRANCH'","name":"'$BUILD_NAME'"}' | jq ".code" | awk 'NR==1 {print substr($1,2,10)}')
-           i=$((i+1))
-       done
-       
-       echo "BUILD_NAME : ${BUILD_NAME}"
-       echo "BUILD_CODE : ${BUILD_CODE}"
-       echo $BUILD_CODE > PDeploy
-       while [ "$BUILD_STATUS" != '"SUCCESS"' ] && [ "$BUILD_STATUS" != '"FAIL"' ] && [ "$BUILD_STATUS" != "null" ]
-       do
-           sleep 120
-           BUILD_STATUS=$(curl -s -X GET -H "Authorization: Bearer $AUTH_TOKEN" "https://portalrotapi.hana.ondemand.com/v2/subscriptions/$SUBSCRIPTION_CODE/builds/${BUILD_CODE}" | jq ".status" | awk 'NR==1 {print $1}')
-           echo "Code is $BUILD_STATUS"
-       done
-       if [ "$BUILD_STATUS" = "null" ]
-       then
-           echo "Build is not started due to api call error, please check"
-           exit 1
-       fi
-       echo "\n"
-       echo "                    Stage Completed, Printing Logs                        "
-       echo "\n"
-       curl -s -X GET -H "Authorization: Bearer $AUTH_TOKEN" "https://portalrotapi.hana.ondemand.com/v2/subscriptions/$SUBSCRIPTION_CODE/builds/${BUILD_CODE}/logs" -H "Accept: application/octet-stream" --output ${BUILD_CODE}_log.zip
-       unzip ${BUILD_CODE}_log.zip || echo "Log zip file not found, might be becuase of API Team"
-       cat releaselog-${BUILD_CODE}.txt || echo "Log file not found, might be becuase of API Team"
-       echo "\n"
-       echo "              Logs of build stage are successfully printed                "
-       if [ "$BUILD_STATUS" = '"FAIL"' ]
-       then
-           echo "Build Stage Failed"
-           exit 1
-       else
-           echo "======================================================================"
-           echo "                  CCV2 Build completed successfully                   "
-           echo "======================================================================"
-           set -x
-       fi
+    
     - name: Microsoft Teams Notification
       uses: jdcargile/ms-teams-notification@v1.4
       with:
