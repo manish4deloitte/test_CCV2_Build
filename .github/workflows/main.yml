@@ -31,7 +31,7 @@ on:
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
   SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
-  BUILD_NAME: echo "BUILD_$(echo `date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)"
+  BUILD_NAME: "BUILD_$(echo `date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)"
 
   
 jobs:
