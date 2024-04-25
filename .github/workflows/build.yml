@@ -21,7 +21,9 @@ jobs:
           echo "hello world"
           echo ${BUILD_NAME}
           echo "BUILD_NAME=${BUILD_NAME}" >> $GITHUB_ENV
-     
+      - name: Print env variable
+        run: |
+            echo ${{ env.BUILD_NAME }}
   approved:
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
