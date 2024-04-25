@@ -7,7 +7,7 @@ on:
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
   SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
-  
+  BUILD_NAME: echo "BUILD_$(echo `date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)"
 
   
 jobs:
@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "hello world"
+      - run: echo ${{ env.BUILD_NAME }}
   approved:
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
