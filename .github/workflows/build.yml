@@ -31,7 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - run : echo $BUILD_NAME
+    - run : |
+        echo ${BUILD_NAME}
     - name: Microsoft Teams Notification
       uses: jdcargile/ms-teams-notification@v1.4
       with:
