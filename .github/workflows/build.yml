@@ -1,21 +1,26 @@
 name: CCV2 Build
 
 on:
+  workflow_dispatch:
   pull_request_review:
     types: [submitted]
     
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
   SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
-  BUILD_NAME: echo "BUILD_$(echo `date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)"
+  
 
   
 jobs:
   one:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hello world"
-      - run: echo ${{ env.BUILD_NAME }}
+      - name: Build prints 
+        run: |
+          BUILD_NAME="BUILD_"$(echo `date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)
+          echo "hello world"
+          echo ${BUILD_NAME}
+     
   approved:
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
