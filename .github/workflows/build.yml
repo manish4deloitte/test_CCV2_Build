@@ -31,8 +31,8 @@ jobs:
           build_start_timestamp=$(echo "$buildData" | jq -r '.buildStartTimestamp[:-5]')
       
           # Remove the -j flag
-          build_end_epoch_seconds=$(date -jf "%Y-%m-%dT%H:%M:%S" "$build_end_timestamp" +%s)
-          build_start_epoch_seconds=$(date -jf "%Y-%m-%dT%H:%M:%S" "$build_start_timestamp" +%s)
+          build_end_epoch_seconds=$(date -f "%Y-%m-%dT%H:%M:%S" "$build_end_timestamp" +%s)
+          build_start_epoch_seconds=$(date -f "%Y-%m-%dT%H:%M:%S" "$build_start_timestamp" +%s)
 
           # Calculate duration in seconds
           duration_seconds=$((build_end_epoch_seconds - build_start_epoch_seconds))
