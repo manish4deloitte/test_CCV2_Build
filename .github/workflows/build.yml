@@ -24,14 +24,16 @@ jobs:
       - name: Print env variable
         run: |
             echo ${{ env.BUILD_NAME }}
-      - name: Print Build Duration 
-        run: |
-          buildData=$(curl -s -X GET -H "Authorization: Bearer ${{ env.AUTH_TOKEN }}" "https://portalapi.commerce.ondemand.com/v2/subscriptions/${{ env.SUBSCRIPTION_CODE }}/builds/20240425.11"  -H 'Content-Type: application/json') 
-          
+      - name: Print Build Duration         
+        run: |          
+          buildData=$(curl -s -X GET -H "Authorization: Bearer ${{ env.AUTH_TOKEN }}" "https://portalapi.commerce.ondemand.com/v2/subscriptions/${{ env.SUBSCRIPTION_CODE }}/builds/20240425.11"  -H 'Content-Type: application/json')
           build_end_timestamp=$(echo "$buildData" | jq -r '.buildEndTimestamp[:-5]')
           build_start_timestamp=$(echo "$buildData" | jq -r '.buildStartTimestamp[:-5]')
+      
+          # Remove the -j flag
           build_end_epoch_seconds=$(date -jf "%Y-%m-%dT%H:%M:%S" "$build_end_timestamp" +%s)
           build_start_epoch_seconds=$(date -jf "%Y-%m-%dT%H:%M:%S" "$build_start_timestamp" +%s)
+
           # Calculate duration in seconds
           duration_seconds=$((build_end_epoch_seconds - build_start_epoch_seconds))
           # Convert duration to human-readable format (days, hours, minutes, seconds)
