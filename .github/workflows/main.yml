@@ -31,7 +31,7 @@ on:
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
   SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
-  
+  BUILD_NAME: echo "BUILD_$(echo `date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)"
 
   
 jobs:
@@ -43,6 +43,7 @@ jobs:
        echo ${{ inputs.targetEnvironment }}
        echo ${{ inputs.systemUpdate }}
        echo ${{ inputs.deploymentMode }}
+       echo ${{ env.BUILD_NAME }}
        
     - name: Microsoft Teams Notification
       uses: jdcargile/ms-teams-notification@v1.4
