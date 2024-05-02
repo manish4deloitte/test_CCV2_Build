@@ -1,9 +1,7 @@
 name: CCV2 Build
 
 on:
-  workflow_dispatch:
-  pull_request_review:
-    types: [submitted]
+  workflow_dispatch
     
 env:
   AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
@@ -15,57 +13,10 @@ jobs:
   one:
     runs-on: ubuntu-latest
     steps:
-      - name: Build prints 
-        run: |
-          BUILD_NAME="BUILD_"$(echo `date --date='+0 hour 0 minutes' '+%b%d_%H_%M'`)
-          echo "hello world"
-          echo ${BUILD_NAME}
-          echo "BUILD_NAME=${BUILD_NAME}" >> $GITHUB_ENV
-      - name: Print env variable
-        run: |
-            echo ${{ env.BUILD_NAME }}
-      - name: Print Build Duration         
-        run: |          
-          #!/bin/bash
-          buildData=$(curl -s -X GET -H "Authorization: Bearer ${{ env.AUTH_TOKEN }}" "https://portalapi.commerce.ondemand.com/v2/subscriptions/${{ env.SUBSCRIPTION_CODE }}/builds/20240425.11"  -H 'Content-Type: application/json')
-          build_end_timestamp=$(echo "$buildData" | jq -r '.buildEndTimestamp[:-5]')
-          build_start_timestamp=$(echo "$buildData" | jq -r '.buildStartTimestamp[:-5]')
-      
-          # Remove the -j flag
-          #build_end_epoch_seconds=$(date -f "%Y-%m-%dT%H:%M:%S" "$build_end_timestamp" +%s)
-          #build_start_epoch_seconds=$(date -f "%Y-%m-%dT%H:%M:%S" "$build_start_timestamp" +%s)
-
-          build_end_epoch_seconds=$(date --date="$build_end_timestamp" +%s)
-          build_start_epoch_seconds=$(date --date="$build_start_timestamp" +%s)
-          # Calculate duration in seconds
-          duration_seconds=$((build_end_epoch_seconds - build_start_epoch_seconds))
-          # Convert duration to human-readable format (days, hours, minutes, seconds)
-          duration_days=$((duration_seconds / 86400))
-          duration_hours=$(( (duration_seconds % 86400) / 3600 ))
-          duration_minutes=$(( (duration_seconds % 3600) / 60 ))
-          duration_seconds=$((duration_seconds % 60))
-          # Print results
-          echo "Build Start Time: $build_start_timestamp"
-          echo "Build End Time: $build_end_timestamp"
-          printf "Build Duration: %d days %d hours %d minutes %d seconds\n" \
-            "$duration_days" "$duration_hours" "$duration_minutes" "$duration_seconds"
-  approved:
-    if: github.event.review.state == 'APPROVED'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "This PR was approved"
-  build:
-    runs-on: ubuntu-latest
-    steps:
-
-    - run : |
-        echo ${{ env.BUILD_NAME }}
-    - name: Microsoft Teams Notification
-      uses: jdcargile/ms-teams-notification@v1.4
-      with:
-          github-token: ${{ github.token }} # this will use the runner's token.
-          ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          notification-summary: Github CCV2 Build for ${{ inputs.targetEnvironment }} environment.
-          notification-color: 17a2b8
-          timezone: America/Denver
-          verbose-logging: true
+      - name: Send pull requests to Microsoft Teams
+        uses: metro-digital/ms-teams-notification-action@v1.0.3
+        with:
+          webhook_url: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+          workflow_run_success: true # default is true
+          workflow_run_failure: true # default is true      
+   
