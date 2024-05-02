@@ -13,8 +13,12 @@ jobs:
   one:
     runs-on: ubuntu-latest
     steps:
-      - name: Send pull requests to Microsoft Teams
-        uses: metro-digital/ms-teams-notification-action@v1.0.3
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Notification
+        if: always()
+        id: send_notification
+        uses: rafal-slowik/gh-action-msteams@master
         with:
-          webhook_url: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          
+          webhook_uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+      
