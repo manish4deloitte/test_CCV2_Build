@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: fail
+        run: | 
+          cat one.sh
       - name: Notification
         if: always()
         id: send_notification
@@ -22,3 +25,6 @@ jobs:
         with:
           webhook_uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
       
+      - name: fail
+        run: | 
+          cat one.sh
