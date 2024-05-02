@@ -17,6 +17,4 @@ jobs:
         uses: metro-digital/ms-teams-notification-action@v1.0.3
         with:
           webhook_url: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          workflow_run_success: true # default is true
-          workflow_run_failure: true # default is true      
-   
+          
