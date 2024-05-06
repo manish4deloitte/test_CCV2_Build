@@ -46,8 +46,9 @@ jobs:
         run: |
           cd sonar-scanner-5.0.1.3006-linux/bin
           ls -lhtr
-          echo $PWD >> $GITHUB_PATH
-          echo $GITHUB_PATH
+          echo $PWD/sonar-scanner-5.0.1.3006-linux/bin >> $GITHUB_PATH
       - name: Print Current Working Directory
-        run: echo $PWD
+        run: |
+          echo $PWD
+          echo $GITHUB_PATH  
     
