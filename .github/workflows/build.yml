@@ -42,7 +42,10 @@ jobs:
         run: | 
           unzip sonar-scanner-cli.zip
           ls
-          pwd
+          cd sonar-scanner-5.0.1.3006-linux
+          ls
+          cd bin
+          ls
         # Consider error handling for failed unzip operation (optional)
 
       - name: Add SonarScanner CLI to PATH (Temporary)
