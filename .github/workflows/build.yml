@@ -44,6 +44,9 @@ jobs:
         # Modify PATH only within this workflow
         run: echo $PWD/bin >> $GITHUB_PATH
         
-      - name: current path
-        run: echo $pwd 
+      - name: Print SonarScanner CLI Folder Structure (After Unzip)
+        run: tree sonar-scanner-cli  # Use 'tree' command for a visual representation
+
+      - name: Print Current Working Directory
+        run: echo $PWD
     
