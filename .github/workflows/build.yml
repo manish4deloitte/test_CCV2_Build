@@ -18,6 +18,8 @@ jobs:
       - name: Download SonarScanner CLI (Secure Way)
         # Download directly using curl with checksum verification
         run: |
+          ls
+          pwd
           set -e  # Exit on failure
 
           # Download URL (replace with the desired version)
@@ -37,16 +39,16 @@ jobs:
           fi
 
       - name: Extract SonarScanner CLI
-        run: unzip sonar-scanner-cli.zip
+        run: | 
+          unzip sonar-scanner-cli.zip
+          ls
+          pwd
         # Consider error handling for failed unzip operation (optional)
 
       - name: Add SonarScanner CLI to PATH (Temporary)
         # Modify PATH only within this workflow
         run: echo $PWD/bin >> $GITHUB_PATH
         
-      - name: Print SonarScanner CLI Folder Structure (After Unzip)
-        run: tree sonar-scanner-cli  # Use 'tree' command for a visual representation
-
       - name: Print Current Working Directory
         run: echo $PWD
     
