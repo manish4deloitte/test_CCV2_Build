@@ -47,7 +47,10 @@ jobs:
 
       - name: Add SonarScanner CLI to PATH (Temporary)
         # Modify PATH only within this workflow
-        run: echo $PWD/bin >> $GITHUB_PATH
+        run: |
+          
+          ls
+          echo $PWD/bin >> $GITHUB_PATH
         
       - name: Print Current Working Directory
         run: echo $PWD
