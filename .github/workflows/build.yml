@@ -16,12 +16,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download SonarScanner CLI
-        run: |
-          curl -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip -o sonar-scanner-cli.zip
+        uses: actions/download-artifact@v3
+        with:
+          name: sonar-scanner-cli
 
       - name: Extract SonarScanner CLI
         run: |
-          unzip sonar-scanner-cli.zip
+          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
           mv sonar-scanner-cli-5.0.1.3006 bin
 
       - name: Add SonarScanner CLI to PATH
