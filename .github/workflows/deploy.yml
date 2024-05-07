@@ -52,7 +52,7 @@ jobs:
           DEPLOYMENT_CODE=493193
 
           echo "Check Build progress of DEPLOYMENT_CODE : ${DEPLOYMENT_CODE}"
-          PROGRESS_CCV2_DEPLOYMENT_URL=$(echo ${env.CCV2_DEPLOY_URL})/${DEPLOYMENT_CODE}/progress
+          PROGRESS_CCV2_DEPLOYMENT_URL=$(echo ${{ env.CCV2_DEPLOY_URL }})/${DEPLOYMENT_CODE}/progress
           echo "Deployment Progress URL:: $PROGRESS_CCV2_DEPLOYMENT_URL"
 
 
