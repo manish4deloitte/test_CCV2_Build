@@ -43,7 +43,7 @@ env:
   
 jobs:
   deploy:
-    runs-on: arc-dawndevs
+    runs-on: ubuntu-latest
     steps:
     - name: Progress Status for Deployment  
       run: |
