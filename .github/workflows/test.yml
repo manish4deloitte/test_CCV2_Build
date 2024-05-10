@@ -1,0 +1,20 @@
+name: Environment wise deployment
+ 
+on:
+  workflow_dispatch:
+    inputs:
+      environmentName:
+        description: 'Select an environment to deploy to?'
+        required: true
+        type: choice
+        options:
+          - development
+          - D2
+jobs:
+  env_secrets:
+    runs-on: ubuntu-latest    
+    environment: ${{ github.event.inputs.environmentName }}
+    steps:      
+    - name: stage wise secrets
+      run: |
+        echo ${{ vars.URL }}
