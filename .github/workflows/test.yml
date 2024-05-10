@@ -8,7 +8,7 @@ on:
         required: true
         type: choice
         options:
-          - development
+          - D1
           - D2
 jobs:
   env_secrets:
