@@ -32,14 +32,6 @@ on:
         - Rolling Update
         - Recreate
 
-env:
-  AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
-  SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
-  CCV2_DEPLOY_URL: ${{ vars.CCV2_PORTAL }}/${{ secrets.SUBSCRIPTION_CODE }}/deployments
-  CCV2_BUILD_URL: ${{ vars.CCV2_PORTAL }}/${{ secrets.SUBSCRIPTION_CODE }}/builds
-  BUILD_CODE: ${{ inputs.buildCode }}
-  ENVIRONMENT_CODE: ${{ inputs.targetEnvironment }}
-
   
 jobs:
   deploy:
@@ -57,6 +49,6 @@ jobs:
           fi
           DATABASE_UPDATE_MODE=$(echo "$databaseUpdateMode")
           STRATEGY=$(echo "$strategy")
-          payload='{ "buildCode": "${{ env.BUILD_CODE }}", "databaseUpdateMode": "'$DATABASE_UPDATE_MODE'", "environmentCode": "${{ env.ENVIRONMENT_CODE }}", "strategy": "'$STRATEGY'" }'
+          payload='{ "databaseUpdateMode": "'$DATABASE_UPDATE_MODE'",  "strategy": "'$STRATEGY'" }'
           echo "Payload :: $payload"
           
