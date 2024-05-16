@@ -1,0 +1,62 @@
+name: CCV2 Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      buildCode:
+        description: "Build Code"
+        type: string
+        required: true
+      targetEnvironment:
+        description: "Target Environment"
+        required: true
+        type: choice 
+        default: d1
+        options: 
+        - d1
+        - d2
+      systemUpdate:
+        description: 'Platform Update Mode'
+        required: true
+        default: 'No migration required'
+        type: choice
+        options:
+        - No migration required 
+        - Migrate data
+      deploymentMode:
+        description: 'Deployment Mode'
+        required: true
+        default: 'Rolling Update'
+        type: choice
+        options:
+        - Rolling Update
+        - Recreate
+
+env:
+  AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+  SUBSCRIPTION_CODE: ${{ secrets.SUBSCRIPTION_CODE }}
+  CCV2_DEPLOY_URL: ${{ vars.CCV2_PORTAL }}/${{ secrets.SUBSCRIPTION_CODE }}/deployments
+  CCV2_BUILD_URL: ${{ vars.CCV2_PORTAL }}/${{ secrets.SUBSCRIPTION_CODE }}/builds
+  BUILD_CODE: ${{ inputs.buildCode }}
+  ENVIRONMENT_CODE: ${{ inputs.targetEnvironment }}
+
+  
+jobs:
+  deploy:
+    runs-on: arc-dawndevs
+    steps:
+    - name: Print data  
+      run: |
+          databaseUpdateMode="NONE"
+          strategy="ROLLING_UPDATE"
+          if [[ "${{ inputs.systemUpdate }}" == "Migrate Data" ]]; then
+            databaseUpdateMode="UPDATE"
+          fi
+          if [[ "${{inputs.deploymentMode }}" == "Recreate" ]]; then 
+            strategy="RECREATE"
+          fi
+          DATABASE_UPDATE_MODE=$(echo "$databaseUpdateMode")
+          STRATEGY=$(echo "$strategy")
+          payload='{ "buildCode": "${{ env.BUILD_CODE }}", "databaseUpdateMode": "'$DATABASE_UPDATE_MODE'", "environmentCode": "${{ env.ENVIRONMENT_CODE }}", "strategy": "'$STRATEGY'" }'
+          echo "Payload :: $payload"
+          
