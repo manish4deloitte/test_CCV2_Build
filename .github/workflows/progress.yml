@@ -42,9 +42,11 @@ jobs:
           databaseUpdateMode="NONE"
           strategy="ROLLING_UPDATE"
           if [[ "${{ inputs.systemUpdate }}" == "Migrate_Data" ]]; then
+            echo "first if"
             databaseUpdateMode="UPDATE"
           fi
           if [[ "${{inputs.deploymentMode }}" == "Recreate" ]]; then 
+            echo "second if"
             strategy="RECREATE"
           fi
           DATABASE_UPDATE_MODE=$(echo "$databaseUpdateMode")
