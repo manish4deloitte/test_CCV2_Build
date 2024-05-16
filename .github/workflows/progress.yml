@@ -22,7 +22,7 @@ on:
         type: choice
         options:
         - No migration required 
-        - Migrate Data
+        - Migrate data
       deploymentMode:
         description: 'Deployment Mode'
         required: true
@@ -41,12 +41,10 @@ jobs:
       run: |
           databaseUpdateMode="NONE"
           strategy="ROLLING_UPDATE"
-          if [[ "${{ inputs.systemUpdate }}" = "Migrate Data" ]]; then
-            echo "first if"
+          if [[ "${{ inputs.systemUpdate }}" == "Migrate data" ]]; then
             databaseUpdateMode="UPDATE"
           fi
-          if [[ "${{ inputs.deploymentMode }}" = "Recreate" ]]; then 
-            echo "second if"
+          if [[ "${{inputs.deploymentMode }}" == "Recreate" ]]; then 
             strategy="RECREATE"
           fi
           DATABASE_UPDATE_MODE=$(echo "$databaseUpdateMode")
