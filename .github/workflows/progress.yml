@@ -41,11 +41,11 @@ jobs:
       run: |
           databaseUpdateMode="NONE"
           strategy="ROLLING_UPDATE"
-          if [[ "${{ inputs.systemUpdate }}" == "Migrate_Data" ]]; then
+          if [[ "${{ inputs.systemUpdate }}" = "Migrate_Data" ]]; then
             echo "first if"
             databaseUpdateMode="UPDATE"
           fi
-          if [[ "${{inputs.deploymentMode }}" == "Recreate" ]]; then 
+          if [[ "${{inputs.deploymentMode }}" = "Recreate" ]]; then 
             echo "second if"
             strategy="RECREATE"
           fi
