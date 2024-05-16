@@ -1,4 +1,4 @@
-name: CCV2 Progress
+name: Progress Test Workflow
 
 on:
   workflow_dispatch:
