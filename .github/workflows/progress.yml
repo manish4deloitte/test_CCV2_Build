@@ -35,7 +35,7 @@ on:
   
 jobs:
   deploy:
-    runs-on: arc-dawndevs
+    runs-on: ubuntu-latest
     steps:
     - name: Print data  
       run: |
