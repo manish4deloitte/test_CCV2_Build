@@ -1,4 +1,4 @@
-name: CCV2 Deploy
+name: CCV2 Progress
 
 on:
   workflow_dispatch:
