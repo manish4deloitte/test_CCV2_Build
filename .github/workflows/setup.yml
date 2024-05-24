@@ -12,16 +12,16 @@ jobs:
     
       - name: Download the Commerce Suite
         run: |
-          cd /home
-          mkdir commerce_suite
-          cd /home/commerce_suite
+          cd 
+          mkdir "$HOME/commerce_suite"
+          cd "$HOME/commerce_suite"
           curl -b -c -L -k --output CXCOMCL221100U_20-70007431.ZIP -u "${{ secrets.SAP_USERNAME }}:${{ secrets.SAP_PASSWORD }}" "https://origin-az.softwaredownloads.sap.com/tokengen/?file=0020000000296672024"
           ls -lhtr
           
       - name: Unzipping files
         run: |
           apt-get install unzip
-          cd /home/commerce_suite
+          cd "$HOME/commerce_suite"
           unzip CXCOMCL221100U_20-70007431.ZIP -d hybris_suite
           cd hybris_suite
           ls -lhtr
