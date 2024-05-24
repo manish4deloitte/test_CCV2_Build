@@ -27,5 +27,5 @@ jobs:
           unzip CXCOMCL221100U_20-70007431.ZIP -d hybris_suite
       - name: Printing files
         run: |
-          cd /opt/commerce_suite
+          cd /opt/commerce_suite/hybris_suite
           ls -lhtr
