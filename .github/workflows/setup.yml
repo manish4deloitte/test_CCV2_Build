@@ -12,6 +12,8 @@ jobs:
     
       - name: Download the Commerce Suite
         run: |
+          echo ${{ github.workspace }}
+          cd ${{ github.workspace }}
           ls -lhtr
           mkdir ~/opt/hybris/commerce_suite
           cd /opt/hybris/commerce_suite
