@@ -23,7 +23,7 @@ jobs:
       - name: Unzipping files
         run: |
           sudo apt-get install unzip
-          cd /opt/commerce_suite"
+          cd /opt/commerce_suite
           unzip CXCOMCL221100U_20-70007431.ZIP -d hybris_suite
           cd hybris_suite
           ls -lhtr
