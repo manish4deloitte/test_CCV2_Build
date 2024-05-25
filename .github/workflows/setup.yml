@@ -13,7 +13,7 @@ jobs:
       - name: Download the Commerce Suite
         run: |
           cd /opt
-          mkdir commerce_suite
+          sudo mkdir commerce_suite
           
           cd commerce_suite
           pwd
