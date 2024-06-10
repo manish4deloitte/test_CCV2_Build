@@ -63,30 +63,4 @@ jobs:
           
           echo "Deployment Progress Status: $deploymentStatus"
 
-    - name: Print Build Duration 
-      run: |
-        
-          #!/bin/bash
-          deploymentData=$(curl -s -X GET -H "Authorization: Bearer ${{ env.AUTH_TOKEN }}" "${{ env.CCV2_DEPLOY_URL }}/${{ env.DEPLOYMENT_CODE }}" -H 'Content-Type: application/json')
-          deployment_end_timestamp=$(echo "$deploymentData" | jq -r '.deployedTimestamp[:-5]')
-          deployment_start_timestamp=$(echo "$deploymentData" | jq -r '.scheduledTimestamp[:-5]')
-      
-          deployment_end_epoch_seconds=$(date --date="$deployment_end_timestamp" +%s)
-          deployment_start_epoch_seconds=$(date --date="$deployment_start_timestamp" +%s)
-          echo "Deployment end Epoch seconds: $deployment_end_epoch_seconds"
-          echo "Deployment start Epoch seconds: $deployment_start_epoch_seconds"
-          # Calculate duration in seconds
-          duration_seconds=$((build_end_epoch_seconds - build_start_epoch_seconds))
-          echo "Duration seconds: $duration_seconds"
-          
-          # Convert duration to human-readable format (days, hours, minutes, seconds)
-          duration_days=$((duration_seconds / 86400))
-          duration_hours=$(( (duration_seconds % 86400) / 3600 ))
-          duration_minutes=$(( (duration_seconds % 3600) / 60 ))
-          duration_seconds=$((duration_seconds % 60))
-          # Print results
-          echo "Deployment Start Time: $deployment_start_timestamp"
-          echo "Deployment End Time: $deployment_end_timestamp"
-          printf "Deployment Duration: %d days %d hours %d minutes %d seconds\n" \
-              "$duration_days" "$duration_hours" "$duration_minutes" "$duration_seconds"
-        
+   
