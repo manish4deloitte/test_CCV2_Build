@@ -1,4 +1,4 @@
-name: CCV2 Build
+name: test PR
 
 on:
   pull_request:
