@@ -1,1 +1,16 @@
+name: test PR
 
+on:
+  pull_request:
+    types: [opened, reopened, edited, closed]
+
+jobs:
+  one:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: print current date and time
+        run: | 
+          echo $(date +%F_%H-%M-%S)
+          cat one.txt
