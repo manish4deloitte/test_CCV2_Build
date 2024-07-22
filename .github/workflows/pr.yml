@@ -2,7 +2,7 @@ name: CCV2 Build
 
 on:
   pull_request:
-    types: [opened, synchronize, edited, ready_for_review]
+    types: [opened, reopened]
 
 jobs:
   one:
