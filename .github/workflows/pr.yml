@@ -2,7 +2,7 @@ name: test PR
 
 on:
   pull_request:
-    types: [opened, reopened, edited, closed]
+    types: [opened, edited, closed]
 
 jobs:
   one:
