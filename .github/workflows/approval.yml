@@ -1,11 +1,16 @@
 name: Approval Based Deployment
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  pull_request_review:
-    types: [submitted]
-    
+  workflow_dispatch:
+    inputs:
+      targetEnvironment:
+        description: "Target Environment"
+        required: true
+        type: choice 
+        default: d1
+        options: 
+        - d1
+        - s1
 
 jobs:
   init:
@@ -13,6 +18,8 @@ jobs:
     steps:
       - run: echo "hello world"
   approval:
+    environment:
+      name: d1
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     steps:
