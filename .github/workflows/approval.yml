@@ -9,7 +9,6 @@ jobs:
   deploy:
     environment:
       name: development
-    if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     steps:
       - run: echo "hello world"
