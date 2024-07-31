@@ -1,7 +1,9 @@
 name: Approval Based Deployment
 
-on: [push, pull_request]
-  
+on: 
+   push:
+    branches:
+      - main
 
 jobs:
   deploy:
