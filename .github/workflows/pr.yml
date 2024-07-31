@@ -14,4 +14,4 @@ jobs:
           echo $(date +%F_%H-%M-%S)
           cat one.txt
       - name: Print hello world
-        run: echo "Hello world" 
+        run: echo "Hello world testing" 
