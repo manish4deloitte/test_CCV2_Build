@@ -1,0 +1,25 @@
+name: Approval Based Deployment
+
+on: 
+   push:
+    branches:
+      - main
+   workflow_dispatch:
+    inputs:
+      targetEnvironment:
+        description: "Target Environment"
+        required: true
+        type: choice 
+        default: D1
+        options: 
+        - D1
+        - D2
+        - P1
+jobs:
+  deploy:
+   environment: 
+      name: ${{ github.event.inputs.targetEnvironment }}
+   runs-on: ubuntu-latest
+   steps:
+      - run: echo "hello world"
+  

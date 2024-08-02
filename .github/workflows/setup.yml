@@ -1,0 +1,35 @@
+name: Hybris Setup
+
+on:
+  workflow_dispatch
+    
+jobs:
+  setup:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+    
+      - name: Download the Commerce Suite
+        run: |
+          cd /opt
+          if [ ! -d "commerce_suite" ]; then
+            sudo mkdir commerce_suite
+          fi
+          
+          cd commerce_suite
+          pwd
+          ls -lhtr
+#         sudo curl -b -c -L -k --output CXCOMCL221100U_20-70007431.ZIP -u "${{ secrets.SAP_USERNAME }}:${{ secrets.SAP_PASSWORD }}" "https://origin-az.softwaredownloads.sap.com/tokengen/?file=0020000000296672024"
+          
+          
+      - name: Unzipping files
+        run: |
+          sudo apt-get install unzip
+          cd /opt/commerce_suite
+          sudo mkdir hybris_suite
+          sudo unzip CXCOMCL221100U_20-70007431.ZIP -d hybris_suite
+      - name: Printing files
+        run: |
+          cd /opt/commerce_suite/hybris_suite
+          ls -lhtr

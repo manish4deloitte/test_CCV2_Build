@@ -1,0 +1,54 @@
+name: Progress Test Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      buildCode:
+        description: "Build Code"
+        type: string
+        required: true
+      targetEnvironment:
+        description: "Target Environment"
+        required: true
+        type: choice 
+        default: d1
+        options: 
+        - d1
+        - d2
+      systemUpdate:
+        description: 'Platform Update Mode'
+        required: true
+        default: 'No migration required'
+        type: choice
+        options:
+        - No migration required 
+        - Migrate data
+      deploymentMode:
+        description: 'Deployment Mode'
+        required: true
+        default: 'Rolling Update'
+        type: choice
+        options:
+        - Rolling Update
+        - Recreate
+
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print data  
+      run: |
+          databaseUpdateMode="NONE"
+          strategy="ROLLING_UPDATE"
+          if [[ "${{ inputs.systemUpdate }}" == "Migrate data" ]]; then
+            databaseUpdateMode="UPDATE"
+          fi
+          if [[ "${{inputs.deploymentMode }}" == "Recreate" ]]; then 
+            strategy="RECREATE"
+          fi
+          DATABASE_UPDATE_MODE=$(echo "$databaseUpdateMode")
+          STRATEGY=$(echo "$strategy")
+          payload='{ "databaseUpdateMode": "'$DATABASE_UPDATE_MODE'",  "strategy": "'$STRATEGY'" }'
+          echo "Payload :: $payload"
+          
