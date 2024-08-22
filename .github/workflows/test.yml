@@ -13,11 +13,8 @@ on:
 jobs:
   env_secrets:
     runs-on: ubuntu-latest    
-    environment: ${{ github.event.inputs.environmentName }}
     steps:      
-    - name: stage wise secrets
-      run: |
-        echo ${{ vars.URL }}
+    
     - name: Notification
       if: always()
       id: send_notification
