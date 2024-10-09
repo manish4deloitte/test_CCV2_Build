@@ -46,8 +46,10 @@ jobs:
         APPROVERS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses" \
           | jq -r '.[] | select(.state == "approved") | .creator.login' | sort | uniq)
-        
+
         echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
+    - name: Print approver name
+      run: echo ${{ env.APPROVER }}
 
   deploy:
     runs-on: ubuntu-latest
