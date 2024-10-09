@@ -12,7 +12,7 @@ on:
 jobs:
   approval:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.targetEnvironment != 'D1' }}
+    if: ${{ github.event.inputs.targetEnvironment == 'P1' }}
     steps:
     - name: Wait for approval
       run: echo "Waiting for manual approval..."
