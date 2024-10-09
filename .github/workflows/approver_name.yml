@@ -7,6 +7,7 @@ on:
         description: 'The target environment to deploy to'
         required: true
         type: string
+        default: P1
 
 jobs:
 
