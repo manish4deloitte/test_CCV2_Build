@@ -14,13 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.targetEnvironment != 'D1' }}
     steps:
-    - name: Check if approval is required
-      run: |
-        if [ "${{ github.event.inputs.targetEnvironment }}" == "D1" ]; then
-          echo "No approval required"
-          exit 0
-        fi
-
     - name: Wait for approval
       run: echo "Waiting for manual approval..."
 
