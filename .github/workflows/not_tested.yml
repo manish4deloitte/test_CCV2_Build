@@ -1,0 +1,81 @@
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      targetEnvironment:
+        description: 'The target environment to deploy to'
+        required: true
+        type: string
+        default: P1
+
+jobs:
+  approval:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.targetEnvironment != 'DEV' }}
+    environment:
+      name: ${{ github.event.inputs.targetEnvironment }}
+      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    steps:
+    - name: Check if approval is required
+      run: |
+        if [ "${{ github.event.inputs.targetEnvironment }}" == "DEV" ]; then
+          echo "No approval required"
+          exit 0
+        fi
+
+    - name: Wait for approval
+      run: echo "Waiting for manual approval..."
+
+    - name: Fetch Approver Info
+      id: fetch-approver
+      run: |
+        # Ensure GitHub CLI is installed
+        if ! command -v gh &> /dev/null; then
+          echo "GitHub CLI (gh) could not be found, installing..."
+          sudo apt-get update
+          sudo apt-get install gh -y
+        fi
+
+        # Authenticate GitHub CLI
+        echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+        # Fetch the list of approvers
+        APPROVERS=$(gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals --jq '.[] | select (.environments[] != null) | select(.environments[].name == "${{ github.event.inputs.targetEnvironment }}") | .user.login')
+
+        echo "APPROVERS=$APPROVERS"
+        echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
+
+    - name: Set approval message
+      id: set-approval-message
+      run: |
+        if [ -n "${{ env.APPROVERS }}" ]; then
+          APPROVAL="Approved By: ${{ env.APPROVERS }}"
+        else
+          APPROVAL="No approval required"
+        fi
+        echo "APPROVAL=$APPROVAL" >> $GITHUB_ENV
+
+    - name: Print approval status
+      run: echo "${{ env.APPROVAL }}"
+
+    - name: Fetch GitHub Profile Name
+      id: fetch-profile
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const approvers = process.env.APPROVERS.split(' ');
+          const approver = approvers[0]; // Assuming the first approver
+          const response = await github.rest.users.getByUsername({
+            username: approver
+          });
+          const profileName = response.data.name;
+          core.setOutput('profile_name', profileName);
+
+    - name: Set Profile Name as Environment Variable
+      run: echo "PROFILE_NAME=${{ steps.fetch-profile.outputs.profile_name }}" >> $GITHUB_ENV
+
+    - name: Print Profile Name
+      run: echo "Profile Name: ${{ env.PROFILE_NAME }}"
