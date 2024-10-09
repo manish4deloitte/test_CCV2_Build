@@ -9,15 +9,6 @@ on:
         type: string
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Build project
-      run: echo "Building the project..."
 
   approval:
     runs-on: ubuntu-latest
@@ -61,18 +52,3 @@ jobs:
         
     - name: Print approver name
       run: echo ${{ env.APPROVERS }}
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build, approval]
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Deploy project
-      run: echo "Deploying the project..."
-
-    - name: Send Power Automate Notification
-      run: |
-        echo ${{ env.APPROVER }}
