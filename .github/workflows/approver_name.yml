@@ -13,7 +13,7 @@ jobs:
 
   approval:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.targetEnvironment == 'D1' || github.event.inputs.targetEnvironment == 'P1' || github.event.inputs.targetEnvironment == 'PROD' }}
+    if: ${{ github.event.inputs.targetEnvironment == 'QA' || github.event.inputs.targetEnvironment == 'P1' || github.event.inputs.targetEnvironment == 'PROD' }}
 
     steps:
     - name: Wait for approval
@@ -40,3 +40,11 @@ jobs:
         
     - name: Print approver name
       run: echo ${{ env.APPROVERS }}
+      
+    - name: Print approval status
+      run: |
+        if [ -n "${{ env.APPROVERS }}" ]; then
+          echo "Approved By: ${{ env.APPROVERS }}"
+        else
+          echo "No approval required"
+        fi
