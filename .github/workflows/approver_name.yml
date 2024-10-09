@@ -14,9 +14,6 @@ jobs:
   approval:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.targetEnvironment == 'D1' || github.event.inputs.targetEnvironment == 'P1' || github.event.inputs.targetEnvironment == 'PROD' }}
-    environment:
-      name: ${{ github.event.inputs.targetEnvironment }}
-      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
     steps:
     - name: Wait for approval
