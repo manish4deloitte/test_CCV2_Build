@@ -1,0 +1,56 @@
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      targetEnvironment:
+        description: 'The target environment to deploy to'
+        required: true
+        type: string
+        default: P1
+
+jobs:
+  approval:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.targetEnvironment != 'DEV' }}
+    environment:
+      name: ${{ github.event.inputs.targetEnvironment }}
+      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    steps:
+    - name: Check if approval is required
+      run: |
+        if [ "${{ github.event.inputs.targetEnvironment }}" == "DEV" ]; then
+          echo "No approval required"
+          exit 0
+        fi
+
+    - name: Wait for approval
+      run: echo "Waiting for manual approval..."
+
+    - name: Fetch Approver Info
+      id: fetch-approver
+      run: |
+        # Ensure GitHub CLI is installed
+        if ! command -v gh &> /dev/null; then
+          echo "GitHub CLI (gh) could not be found, installing..."
+          sudo apt-get update
+          sudo apt-get install gh -y
+        fi
+
+        # Authenticate GitHub CLI
+        echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+        # Fetch the list of approvers
+        APPROVERS=$(gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals --jq '.[] | select (.environments[] != null) | select(.environments[].name == "${{ github.event.inputs.targetEnvironment }}") | .user.login')
+
+        echo "APPROVERS=$APPROVERS"
+        echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
+
+    - name: Print approval status
+      run: |
+        if [ -n "${{ env.APPROVERS }}" ]; then
+          echo "Approved By: ${{ env.APPROVERS }}"
+        else
+          echo "No approval required"
+        fi
