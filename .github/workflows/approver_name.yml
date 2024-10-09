@@ -45,6 +45,9 @@ jobs:
         
         echo "DEPLOYMENT_STATUSES=$DEPLOYMENT_STATUSES"
 
+        # Debug: Print the raw JSON response
+        echo "$DEPLOYMENT_STATUSES" | jq .
+
         APPROVERS=$(echo "$DEPLOYMENT_STATUSES" | jq -r '.[] | select(.state == "success") | .creator.login' | sort | uniq)
         
         echo "APPROVERS=$APPROVERS"
