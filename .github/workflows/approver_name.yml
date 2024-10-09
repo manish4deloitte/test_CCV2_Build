@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      targetEnvironment:
+        description: 'The target environment to deploy to'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build project
+      run: echo "Building the project..."
+
+  approval:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.event.inputs.targetEnvironment == 'P1' || github.event.inputs.targetEnvironment == 'D1' || github.event.inputs.targetEnvironment == 'PROD' }}
+    environment:
+      name: ${{ github.event.inputs.targetEnvironment }}
+      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    steps:
+    - name: Wait for approval
+      run: echo "Waiting for manual approval..."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, approval]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Deploy project
+      run: echo "Deploying the project..."
+
+    - name: Send Power Automate Notification
+      run: |
+        echo ${{ env.APPROVER }}
