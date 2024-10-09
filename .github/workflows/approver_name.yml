@@ -22,35 +22,22 @@ jobs:
     - name: Wait for approval
       run: echo "Waiting for manual approval..."
 
-    - name: Fetch Deployment ID
-      id: fetch-deployment-id
-      run: |
-        DEPLOYMENT_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/deployments" \
-          | jq -r --arg env "${{ github.event.inputs.targetEnvironment }}" '.[] | select(.environment == $env) | .id' | head -n 1)
-        
-        echo "DEPLOYMENT_ID=$DEPLOYMENT_ID"
-        echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
-
     - name: Fetch Approver Info
       id: fetch-approver
       run: |
-        if [ -z "$DEPLOYMENT_ID" ]; then
-          echo "No deployment found for the environment: ${{ github.event.inputs.targetEnvironment }}"
-          exit 1
+        # Ensure GitHub CLI is installed
+        if ! command -v gh &> /dev/null; then
+          echo "GitHub CLI (gh) could not be found, installing..."
+          sudo apt-get update
+          sudo apt-get install gh -y
         fi
 
-        DEPLOYMENT_STATUSES=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses")
-        
-        echo "DEPLOYMENT_STATUSES=$DEPLOYMENT_STATUSES"
+        # Authenticate GitHub CLI
+        echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-        # Debug: Print the raw JSON response
-        echo "$DEPLOYMENT_STATUSES" | jq .
+        # Fetch the list of approvers
+        APPROVERS=$(gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals --jq '.[] | select (.environments[] != null) | select(.environments[].name == "${{ github.event.inputs.targetEnvironment }}") | .user.login')
 
-        # Extract approvers based on the correct state
-        APPROVERS=$(echo "$DEPLOYMENT_STATUSES" | jq -r '.[] | select(.state == "success" or .state == "approved" or .state == "completed") | .creator.login' | sort | uniq)
-        
         echo "APPROVERS=$APPROVERS"
         echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
         
