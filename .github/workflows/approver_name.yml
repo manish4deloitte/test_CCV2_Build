@@ -13,7 +13,10 @@ jobs:
 
   approval:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.targetEnvironment == 'QA' || github.event.inputs.targetEnvironment == 'P1' || github.event.inputs.targetEnvironment == 'PROD' }}
+    if: ${{ github.event.inputs.targetEnvironment == 'D1' || github.event.inputs.targetEnvironment == 'P1' || github.event.inputs.targetEnvironment == 'PROD' }}
+    environment:
+      name: ${{ github.event.inputs.targetEnvironment }}
+      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
     steps:
     - name: Wait for approval
@@ -28,13 +31,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install gh -y
         fi
-
         # Authenticate GitHub CLI
         echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-
         # Fetch the list of approvers
         APPROVERS=$(gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals --jq '.[] | select (.environments[] != null) | select(.environments[].name == "${{ github.event.inputs.targetEnvironment }}") | .user.login')
-
         echo "APPROVERS=$APPROVERS"
         echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
         
