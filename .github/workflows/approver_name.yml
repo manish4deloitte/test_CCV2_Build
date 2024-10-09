@@ -34,9 +34,11 @@ jobs:
     - name: Fetch Approver Info
       id: fetch-approver
       run: |
-        DEPLOYMENT_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        DEPLOYMENT_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/deployments" \
           | jq -r --arg env "${{ github.event.inputs.targetEnvironment }}" '.[] | select(.environment == $env) | .id' | head -n 1)
+
+        echo $DEPLOYMENT_ID
         
         if [ -z "$DEPLOYMENT_ID" ]; then
           echo "No deployment found for the environment: ${{ github.event.inputs.targetEnvironment }}"
@@ -46,7 +48,9 @@ jobs:
         APPROVERS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses" \
           | jq -r '.[] | select(.state == "approved") | .creator.login' | sort | uniq)
-
+        echo "-------------------"
+        echo $APPROVERS
+        echo "-------------------"
         echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
     - name: Print approver name
       run: echo ${{ env.APPROVER }}
