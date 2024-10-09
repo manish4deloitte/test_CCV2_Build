@@ -49,7 +49,7 @@ jobs:
         echo "$DEPLOYMENT_STATUSES" | jq .
 
         # Extract approvers based on the correct state
-        APPROVERS=$(echo "$DEPLOYMENT_STATUSES" | jq -r '.[] | select(.state == "queued" or .state == "waiting") | .creator.login' | sort | uniq)
+        APPROVERS=$(echo "$DEPLOYMENT_STATUSES" | jq -r '.[] | select(.state == "success" or .state == "approved" or .state == "completed") | .creator.login' | sort | uniq)
         
         echo "APPROVERS=$APPROVERS"
         echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
