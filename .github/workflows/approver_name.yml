@@ -31,8 +31,13 @@ jobs:
     - name: Wait for approval
       run: echo "Waiting for manual approval..."
 
-    - name: Set Approver Name
-      run: echo "APPROVER=${{ github.actor }}" >> $GITHUB_ENV
+    - name: Fetch Approver Info
+      id: fetch-approver
+      run: |
+        APPROVERS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/environments/${{ github.event.inputs.targetEnvironment }}/deployment-branch-policies" \
+          | jq -r '.[] | select(.reviewers != null) | .reviewers[].login')
+        echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
 
   deploy:
     runs-on: ubuntu-latest
