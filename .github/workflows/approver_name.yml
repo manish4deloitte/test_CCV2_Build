@@ -22,7 +22,7 @@ jobs:
   approval:
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.event.inputs.targetEnvironment == 'QA' || github.event.inputs.targetEnvironment == 'UAT' || github.event.inputs.targetEnvironment == 'PROD' }}
+    if: ${{ github.event.inputs.targetEnvironment == 'D1' || github.event.inputs.targetEnvironment == 'P1' || github.event.inputs.targetEnvironment == 'PROD' }}
     environment:
       name: ${{ github.event.inputs.targetEnvironment }}
       url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
