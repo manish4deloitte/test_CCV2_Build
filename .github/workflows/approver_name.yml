@@ -54,11 +54,10 @@ jobs:
         
         echo "DEPLOYMENT_STATUSES=$DEPLOYMENT_STATUSES"
 
-        APPROVERS=$(echo "$DEPLOYMENT_STATUSES" | jq -r '.[] | select(.state == "approved") | .creator.login' | sort | uniq)
+        APPROVERS=$(echo "$DEPLOYMENT_STATUSES" | jq -r '.[] | select(.state == "success") | .creator.login' | sort | uniq)
         
         echo "APPROVERS=$APPROVERS"
         echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
-        echo $APPROVERS
         
     - name: Print approver name
       run: echo ${{ env.APPROVERS }}
