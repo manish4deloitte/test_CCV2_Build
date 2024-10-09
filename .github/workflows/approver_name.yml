@@ -31,29 +31,37 @@ jobs:
     - name: Wait for approval
       run: echo "Waiting for manual approval..."
 
+    - name: Fetch Deployment ID
+      id: fetch-deployment-id
+      run: |
+        DEPLOYMENT_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/deployments" \
+          | jq -r --arg env "${{ github.event.inputs.targetEnvironment }}" '.[] | select(.environment == $env) | .id' | head -n 1)
+        
+        echo "DEPLOYMENT_ID=$DEPLOYMENT_ID"
+        echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
+
     - name: Fetch Approver Info
       id: fetch-approver
       run: |
-        DEPLOYMENT_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/deployments" \
-          | jq -r --arg env "${{ github.event.inputs.targetEnvironment }}" '.[] | select(.environment == $env) | .id' | head -n 1)
-
-        echo $DEPLOYMENT_ID
-        
         if [ -z "$DEPLOYMENT_ID" ]; then
           echo "No deployment found for the environment: ${{ github.event.inputs.targetEnvironment }}"
           exit 1
         fi
 
-        APPROVERS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses" \
-          | jq -r '.[] | select(.state == "approved") | .creator.login' | sort | uniq)
-        echo "-------------------"
-        echo $APPROVERS
-        echo "-------------------"
+        DEPLOYMENT_STATUSES=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses")
+        
+        echo "DEPLOYMENT_STATUSES=$DEPLOYMENT_STATUSES"
+
+        APPROVERS=$(echo "$DEPLOYMENT_STATUSES" | jq -r '.[] | select(.state == "approved") | .creator.login' | sort | uniq)
+        
+        echo "APPROVERS=$APPROVERS"
         echo "APPROVERS=$APPROVERS" >> $GITHUB_ENV
+        echo $APPROVERS
+        
     - name: Print approver name
-      run: echo ${{ env.APPROVER }}
+      run: echo ${{ env.APPROVERS }}
 
   deploy:
     runs-on: ubuntu-latest
