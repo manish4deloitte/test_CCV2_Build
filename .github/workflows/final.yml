@@ -12,15 +12,11 @@ on:
 jobs:
   approval:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.targetEnvironment != 'DEV' }}
-    environment:
-      name: ${{ github.event.inputs.targetEnvironment }}
-      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
+    if: ${{ github.event.inputs.targetEnvironment != 'D1' }}
     steps:
     - name: Check if approval is required
       run: |
-        if [ "${{ github.event.inputs.targetEnvironment }}" == "DEV" ]; then
+        if [ "${{ github.event.inputs.targetEnvironment }}" == "D1" ]; then
           echo "No approval required"
           exit 0
         fi
