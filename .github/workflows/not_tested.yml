@@ -66,13 +66,14 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const fs = require('fs');
           const approvers = process.env.APPROVERS.split(' ');
           const approver = approvers[0]; // Assuming the first approver
           const response = await github.rest.users.getByUsername({
             username: approver
           });
           const profileName = response.data.name;
-          fs.writeFileSync(process.env.GITHUB_ENV, `PROFILE_NAME=${profileName}\n`, { flag: 'a' });
+          fs.appendFileSync(process.env.GITHUB_ENV, `PROFILE_NAME=${profileName}\n`);
 
     - name: Set Profile Name as Environment Variable
       run: echo "PROFILE_NAME=${{ steps.fetch-profile.outputs.profile_name }}" >> $GITHUB_ENV
