@@ -73,7 +73,7 @@ jobs:
             username: approver
           });
           const profileName = response.data.name;
-          console.log(`Profile Name: ${profileName}`);
+          
           fs.appendFileSync(process.env.GITHUB_ENV, `PROFILE_NAME=${profileName}\n`);
 
 #    - name: Set Profile Name as Environment Variable
