@@ -76,8 +76,8 @@ jobs:
           console.log(`Profile Name: ${profileName}`);
           fs.appendFileSync(process.env.GITHUB_ENV, `PROFILE_NAME=${profileName}\n`);
 
-    - name: Set Profile Name as Environment Variable
-      run: echo "PROFILE_NAME=${{ steps.fetch-profile.outputs.profile_name }}" >> $GITHUB_ENV
+#    - name: Set Profile Name as Environment Variable
+#      run: echo "PROFILE_NAME=${{ steps.fetch-profile.outputs.profile_name }}" >> $GITHUB_ENV
 
     - name: Print Profile Name
       run: echo "Profile Name:${{ env.PROFILE_NAME }}"
