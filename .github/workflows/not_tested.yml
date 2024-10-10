@@ -72,7 +72,7 @@ jobs:
             username: approver
           });
           const profileName = response.data.name;
-          core.setOutput('profile_name', profileName);
+          fs.writeFileSync(process.env.GITHUB_ENV, `PROFILE_NAME=${profileName}\n`, { flag: 'a' });
 
     - name: Set Profile Name as Environment Variable
       run: echo "PROFILE_NAME=${{ steps.fetch-profile.outputs.profile_name }}" >> $GITHUB_ENV
