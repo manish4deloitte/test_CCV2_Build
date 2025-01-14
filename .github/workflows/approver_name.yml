@@ -20,7 +20,9 @@ jobs:
 
     steps:
     - name: Wait for approval
-      run: echo "Waiting for manual approval..."
+      run: |
+        echo "Waiting for manual approval..."
+        echo "Approved...."
 
     - name: Fetch Approver Info
       id: fetch-approver
