@@ -26,18 +26,12 @@ jobs:
       name: ${{ github.event.inputs.targetEnvironment }}
    runs-on: ubuntu-latest
    steps:
-      - name: Enforce updateConf for P1
-        run: |
-          if [[ "${{ github.event.inputs.targetEnvironment }}" == "P1" && "${{ github.event.inputs.updateConf }}" == "yes" ]]; then
-            echo "FLAG=false" >> $GITHUB_ENV
+     - name: Set effective updateConf value
+       run: |
+          if [[ "${{ github.event.inputs.targetEnvironment }}" == "P1" ]]; then
+            echo "EFFECTIVE_UPDATE_CONF=no" >> $GITHUB_ENV
           else
-            echo "FLAG=true" >> $GITHUB_ENV
+            echo "EFFECTIVE_UPDATE_CONF=${{ github.event.inputs.updateConf }}" >> $GITHUB_ENV
           fi
-
-      - name: Show flag value
-        run: |
-          echo "FLAG is $FLAG"
-
-      - name: Proceed with deployment
-        run: |
-          echo "Proceeding with deployment to ${{ github.event.inputs.targetEnvironment }} with updateConf=${{ github.event.inputs.updateConf }}"
+     - name: Print values
+       run: echo $EFFECTIVE_UPDATE_CONF
