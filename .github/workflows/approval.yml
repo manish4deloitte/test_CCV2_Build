@@ -28,10 +28,9 @@ jobs:
    steps:
       - name: check on environment and update configuration value 
         run: |
-           if [[ ${{ inputs.targetEnvironment }} != 'P1' && ${{ inputs.updateConf }} == 'yes' }}; then
-              echo "Cannot apply"
+           if [[ "${{ inputs.targetEnvironment }}" != "P1" && "${{ inputs.updateConf }}" == "yes" ]]; then
+            echo "Cannot apply"
+            exit 1
            else
-              echo "can apply"
-           fi 
-           
-  
+             echo "can apply"
+           fi
