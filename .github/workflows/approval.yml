@@ -16,10 +16,10 @@ on:
         description: "Update Conf"
         required: true
         type: choice 
-        default: no
+        default: 'no'
         options: 
-        - yes
-        - no
+        - 'yes'
+        - 'no'
 jobs:
   deploy:
    environment: 
