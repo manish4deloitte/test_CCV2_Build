@@ -34,4 +34,6 @@ jobs:
             echo "EFFECTIVE_UPDATE_CONF=${{ github.event.inputs.updateConf }}" >> $GITHUB_ENV
           fi
      - name: Print values
-       run: echo $EFFECTIVE_UPDATE_CONF
+       run: |
+         echo "EFFECTIVE_UPDATE_CONF = $EFFECTIVE_UPDATE_CONF"
+         echo "ENV = ${{ github.event.inputs.targetEnvironment }}"
