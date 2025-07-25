@@ -29,9 +29,9 @@ jobs:
           echo "$CHANGED_FILES"
 
           # Save as output (comma-separated)
-          echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "changed_files=$CHANGED_FILES" >> $GITHUB_ENV
 
       - name: Use changed files
         run: |
           echo "Files changed in this PR:"
-          echo "${{ steps.changed-files.outputs.changed_files }}"
+          echo "${{ env.changed_files }}"
