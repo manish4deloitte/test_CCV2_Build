@@ -13,22 +13,23 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for all branches and tags
 
+      - name: Fetch base branch
+        run: |
+          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
+
       - name: Get changed files between PR and base branch
         id: changed-files
         run: |
           echo "Base branch: ${{ github.base_ref }}"
           echo "PR branch: ${{ github.head_ref }}"
 
-          # Fetch the base branch
-          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
-
           # List changed files between base and head
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...${{ github.head_ref }})
+          CHANGED_FILES=$(git diff --name-only ${{ github.base_ref }}...${{ github.head_ref }})
 
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
-          # Save as output (comma-separated)
+          # Save as output (newline-separated)
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
