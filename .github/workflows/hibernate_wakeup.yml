@@ -3,15 +3,15 @@ name: Scheduled Environment Management
 
 on:
   schedule:
-    - cron: '30 10 * * 3' # Friday 11 PM IST
-    - cron: '5 11 * * 3'  # Monday 8 AM IST
+    - cron: '35 10 * * 5' # Hibernate: Friday 4:05 PM IST
+    - cron: '40 10 * * 1' # Wake up: Monday 4:10 PM IST
 
 env:
   API_URL: https://portalapi.commerce.ondemand.com/v2/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/environments/d1/scheduledactivities
 
 jobs:
   hibernate:
-    if: github.event.schedule == '30 10 * * 3'
+    if: github.event.schedule == '35 10 * * 5'
     runs-on: ubuntu-latest
     steps:
       - name: Check for future Hibernate activities
@@ -41,7 +41,7 @@ jobs:
             }'
 
   wakeup:
-    if: github.event.schedule == '5 11 * * 3'
+    if: github.event.schedule == '40 10 * * 1'
     runs-on: ubuntu-latest
     steps:
       - name: Check Hibernate status
