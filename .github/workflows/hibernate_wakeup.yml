@@ -3,8 +3,8 @@ name: Scheduled Environment Management
 
 on:
   schedule:
-    - cron: '45 10 * * 3' # Hibernate: Friday 4:05 PM IST
-    - cron: '50 10 * * 3' # Wake up: Monday 4:10 PM IST
+    - cron: '50 10 3 9 *' # Hibernate: Sept 3, 4:20 PM IST
+    - cron: '55 10 3 9 *' # Wake up: Sept 3, 4:25 PM IST
   workflow_dispatch:
 
 env:
@@ -12,7 +12,7 @@ env:
 
 jobs:
   hibernate:
-    if: github.event.schedule == '35 10 * * 5'
+    if: github.event.schedule == '50 10 3 9 *'
     runs-on: ubuntu-latest
     steps:
       - name: Check for future Hibernate activities
@@ -42,7 +42,7 @@ jobs:
             }'
 
   wakeup:
-    if: github.event.schedule == '40 10 * * 1'
+    if: github.event.schedule == '55 10 3 9 *'
     runs-on: ubuntu-latest
     steps:
       - name: Check Hibernate status
