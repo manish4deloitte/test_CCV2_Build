@@ -3,8 +3,8 @@ name: Scheduled Environment Management
 
 on:
   schedule:
-    - cron: '35 10 * * 5' # Hibernate: Friday 4:05 PM IST
-    - cron: '40 10 * * 1' # Wake up: Monday 4:10 PM IST
+    - cron: '45 10 * * 3' # Hibernate: Friday 4:05 PM IST
+    - cron: '50 10 * * 3' # Wake up: Monday 4:10 PM IST
   workflow_dispatch:
 
 env:
