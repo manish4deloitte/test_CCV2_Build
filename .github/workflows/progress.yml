@@ -51,4 +51,10 @@ jobs:
           STRATEGY=$(echo "$strategy")
           payload='{ "databaseUpdateMode": "'$DATABASE_UPDATE_MODE'",  "strategy": "'$STRATEGY'" }'
           echo "Payload :: $payload"
-          
+    - name: Notify Email
+      uses: cinotify/github-action@main
+      with:
+        to: 'gagopal@deloitte.com,kmanishkundanbhai@deloitte.com'
+        subject: 'D2 Deployment'
+        body: '<em>D2 Deployment triggered.</em>'
+        type: 'text/html'

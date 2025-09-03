@@ -1,0 +1,40 @@
+name: Get Changed Files in PR
+
+on:
+  pull_request:
+
+jobs:
+  changed-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Fetch base branch
+        run: |
+          git fetch origin ${{ github.base_ref }}
+
+      - name: Get changed files between PR and base branch
+        id: changed-files
+        run: |
+          echo "Base branch: origin/${{ github.base_ref }}"
+          echo "PR branch: HEAD"
+
+          # List changed files between base and head
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          # Save as output (newline-separated)
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Use changed files
+        run: |
+          echo "Files changed in this PR:"
+          echo "${{ steps.changed-files.outputs.changed_files }}"

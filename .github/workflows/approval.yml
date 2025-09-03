@@ -1,9 +1,6 @@
 name: Approval Based Deployment
 
 on: 
-   push:
-    branches:
-      - main
    workflow_dispatch:
     inputs:
       targetEnvironment:
@@ -15,11 +12,28 @@ on:
         - D1
         - D2
         - P1
+      updateConf:
+        description: "Update Conf"
+        required: true
+        type: choice 
+        default: 'no'
+        options: 
+        - 'yes'
+        - 'no'
 jobs:
   deploy:
    environment: 
       name: ${{ github.event.inputs.targetEnvironment }}
    runs-on: ubuntu-latest
    steps:
-      - run: echo "hello world"
-  
+     - name: Set effective updateConf value
+       run: |
+          if [[ "${{ github.event.inputs.targetEnvironment }}" == "P1" ]]; then
+            echo "EFFECTIVE_UPDATE_CONF=no" >> $GITHUB_ENV
+          else
+            echo "EFFECTIVE_UPDATE_CONF=${{ github.event.inputs.updateConf }}" >> $GITHUB_ENV
+          fi
+     - name: Print values
+       run: |
+         echo "EFFECTIVE_UPDATE_CONF = $EFFECTIVE_UPDATE_CONF"
+         echo "ENV = ${{ github.event.inputs.targetEnvironment }}"
