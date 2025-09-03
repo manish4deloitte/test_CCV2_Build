@@ -1,0 +1,76 @@
+
+name: Scheduled Environment Management
+
+on:
+  schedule:
+    - cron: '30 10 * * 3' # Friday 11 PM IST
+    - cron: '5 11 * * 3'  # Monday 8 AM IST
+
+env:
+  API_URL: https://portalapi.commerce.ondemand.com/v2/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/environments/d1/scheduledactivities
+
+jobs:
+  hibernate:
+    if: github.event.schedule == '30 10 * * 3'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for future Hibernate activities
+        id: check_hibernate
+        run: |
+          
+          response=$(curl --silent --location "$API_URL" \
+            --header "Authorization: Bearer ${{ secrets.PORTAL_API_TOKEN }}" \
+            --header "Content-Type: application/json")
+
+          # Find any future Hibernate activities with relevant status
+          future_hibernate=$(echo "$response" | jq '[.[] | select(.activityType == "HIBERNATE_COMMERCE_ENVIRONMENT" and (.status == "SCHEDULED" or .status == "QUEUED" or .status == "RUNNING") and (.scheduledTimestamp > (now | todate)) )] | length')
+
+          echo "Future Hibernate Activities: $future_hibernate"
+          echo "::set-output name=future_hibernate::$future_hibernate"
+
+      - name: Hibernate Environment if not already scheduled
+        if: steps.check_hibernate.outputs.future_hibernate == '0'
+        run: |
+          
+          curl --location "$API_URL" \
+            --header "Authorization: Bearer ${{ secrets.PORTAL_API_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data '{
+              "activityType": "HIBERNATE_COMMERCE_ENVIRONMENT",
+              "scheduledTimestamp": "'"$(date -u +"%Y-%m-%dT%H:%M:%S+00:00")"'"
+            }'
+
+  wakeup:
+    if: github.event.schedule == '5 11 * * 3'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Hibernate status
+        id: check_wakeup
+        run: |
+          
+          response=$(curl --silent --location "$API_URL" \
+            --header "Authorization: Bearer ${{ secrets.PORTAL_API_TOKEN }}" \
+            --header "Content-Type: application/json")
+
+          # Get the latest Hibernate activity with status SUCCESS
+          latest_hibernate_success=$(echo "$response" | jq '[.[] | select(.activityType == "HIBERNATE_COMMERCE_ENVIRONMENT" and .status == "SUCCESS")] | sort_by(.scheduledTimestamp) | last')
+
+          if [ "$latest_hibernate_success" != "null" ]; then
+            echo "Environment is hibernated."
+            echo "::set-output name=hibernated::true"
+          else
+            echo "No successful hibernation found."
+            echo "::set-output name=hibernated::false"
+          fi
+
+      - name: Wake Up Environment if hibernated
+        if: steps.check_wakeup.outputs.hibernated == 'true'
+        run: |
+          
+          curl --location "$API_URL" \
+            --header "Authorization: Bearer ${{ secrets.PORTAL_API_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data '{
+              "activityType": "WAKE_UP_COMMERCE_ENVIRONMENT",
+              "scheduledTimestamp": "'"$(date -u +"%Y-%m-%dT%H:%M:%S+00:00")"'"
+            }'
