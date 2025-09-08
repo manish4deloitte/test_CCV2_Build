@@ -6,9 +6,9 @@ jobs:
   deploy:
    strategy:
       matrix:
-        environment: ${{ fromJSON(vars.MULTI_ENVS) }}
+        environment: ${{ vars.MULTI_ENVS }}
    environment: 
-      name: ${{ github.event.inputs.targetEnvironment }}
+      name: ${{ matrix.environment }}
    runs-on: ubuntu-latest
    steps:
      - name: Printing environment name
