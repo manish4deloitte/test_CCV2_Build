@@ -1,0 +1,16 @@
+name: Matrix Print
+
+on: 
+   workflow_dispatch
+jobs:
+  deploy:
+   strategy:
+      matrix:
+        environment: ${{ fromJSON(vars.MULTI_ENVS) }}
+   environment: 
+      name: ${{ github.event.inputs.targetEnvironment }}
+   runs-on: ubuntu-latest
+   steps:
+     - name: Printing environment name
+       run: |
+         echo "ENV = ${{ matrix.environment }}"
