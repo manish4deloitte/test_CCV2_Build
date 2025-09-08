@@ -6,7 +6,7 @@ jobs:
   deploy:
    strategy:
       matrix:
-        environment: ${{ vars.MULTI_ENVS }}
+        environment: ${{ fromJSON(vars.MULTI_ENVS) }}
    environment: 
       name: ${{ matrix.environment }}
    runs-on: ubuntu-latest
