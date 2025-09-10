@@ -1,0 +1,12 @@
+name: Scheduled Job
+
+on:
+  schedule:
+    - cron: '44 7 * * *'  # Runs daily at midnight
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show actor
+        run: echo "Triggered by ${{ github.actor }}"
