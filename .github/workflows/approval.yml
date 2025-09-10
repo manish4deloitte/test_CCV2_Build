@@ -32,7 +32,7 @@ jobs:
           node-version: '16'
      - name: Auto Approve Deploys
         # you can use any @vN.N.N tag from https://github.com/activescott/automate-environment-deployment-approval/releases
-       uses: activescott/automate-environment-deployment-approval@main
+       uses: activescott/automate-environment-deployment-approval@1.1.0
        with:
           github_token: ${{ secrets.GH_TOKEN_FOR_AUTO_APPROVING_DEPLOYS }}
           environment_allow_list: |
