@@ -1,27 +1,12 @@
 name: Environment wise deployment
  
 on:
-  workflow_dispatch:
-    inputs:
-      environmentName:
-        description: 'Select an environment to deploy to?'
-        required: true
-        type: choice
-        options:
-          - development
-          - D2
+  workflow_dispatch
 jobs:
   env_secrets:
-    runs-on: ubuntu-latest    
+    runs-on: self-hosted    
     steps:      
     
-    - name: Notification
-      if: always()
-      id: send_notification
-      uses: rafal-slowik/gh-action-msteams@master
-      with:
-        webhook_uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-    - name: Create Release
-      run: gh release create ${{ github.ref }} --generate-notes
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Test
+      run: |
+       echo "Hello world"
