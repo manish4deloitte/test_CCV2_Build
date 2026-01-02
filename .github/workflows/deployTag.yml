@@ -32,7 +32,7 @@ jobs:
       - name: Extract value between buildCode and branch in buildVersion
         run: | 
           
-          EXTRACTED=$(echo "${{ env.BUILD_VERSION }}" | sed -e "s/.*${{ env.BUILD_CODE }}-\(.*\)-${{ env.BRANCH }}/\1/")
+          EXTRACTED=$(echo "${{ env.BUILD_VERSION }}" | sed -e "s#.*${{ env.BUILD_CODE }}-\(.*\)-${{ env.BRANCH }}#\1#")
           echo "code: ${{ env.CODE }}"
           echo "buildCode: ${{ env.BUILD_CODE }}"
           echo "buildVersion: ${{ env.BUILD_VERSION }}"
