@@ -1,0 +1,21 @@
+
+# Step 1: Call Deployments API and parse the first code and buildCode
+DEPLOYMENTS_JSON=$(curl -s "https://portalapi.commerce.ondemand.com/v2/subscriptions/c9ef4f6487d4499aa3ea3d9bfd6f4957/deployments")
+CODE=$(echo "$DEPLOYMENTS_JSON" | jq -r '.value[0].code')
+BUILD_CODE=$(echo "$DEPLOYMENTS_JSON" | jq -r '.value[0].buildCode')
+
+# Step 2: Call Builds API using buildCode
+BUILDS_JSON=$(curl -s "https://portalapi.commerce.ondemand.com/v2/subscriptions/c9ef4f6487d4499aa3ea3d9bfd6f4957/builds/$BUILD_CODE")
+BUILD_VERSION=$(echo "$BUILDS_JSON" | jq -r '.buildVersion')
+BRANCH=$(echo "$BUILDS_JSON" | jq -r '.branch')
+
+# Step 3: Extract value between buildCode and branch in buildVersion
+# (This assumes buildCode and branch both occur in the buildVersion string, and the value you want is between them)
+INTERMEDIATE=$(echo "$BUILD_VERSION" | sed -e "s/.*${BUILD_CODE}-{{{{\(.*\)}}}}-${BRANCH}/\1/")
+
+# Output variables for verification
+echo "code: $CODE"
+echo "buildCode: $BUILD_CODE"
+echo "buildVersion: $BUILD_VERSION"
+echo "branch: $BRANCH"
+echo "Extracted Value: $INTERMEDIATE"
