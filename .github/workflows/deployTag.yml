@@ -12,6 +12,8 @@ jobs:
           echo $DEPLOYMENTS_JSON
           CODE=$(echo "$DEPLOYMENTS_JSON" | jq -r '.value[0].code')
           BUILD_CODE=$(echo "$DEPLOYMENTS_JSON" | jq -r '.value[0].buildCode')
+          echo "CODE=$CODE" >> GITHUB_ENV
+          echo "BUILD_CODE=$BUILD_CODE" >> GITHUB_ENV
           
      - name: Call Builds API using buildCode
        run: | 
@@ -19,10 +21,12 @@ jobs:
          echo $BUILD_JSON
          BUILD_VERSION=$(echo "$BUILDS_JSON" | jq -r '.buildVersion')
          BRANCH=$(echo "$BUILDS_JSON" | jq -r '.branch')
+         echo "BUILD_VERSION=$BUILD_VERSION" >> GITHUB_ENV
+         echo "BRANCH=$BRANCH" >> GITHUB_ENV
      - name: Extract value between buildCode and branch in buildVersion
        run: | 
          echo "code: $CODE"
          echo "buildCode: $BUILD_CODE"
          echo "buildVersion: $BUILD_VERSION"
          echo "branch: $BRANCH"
-         echo "Extracted Value: $INTERMEDIATE"
+         
