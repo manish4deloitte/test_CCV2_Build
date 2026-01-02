@@ -12,8 +12,10 @@ jobs:
           echo $DEPLOYMENTS_JSON
           CODE=$(echo "$DEPLOYMENTS_JSON" | jq -r '.value[0].code')
           BUILD_CODE=$(echo "$DEPLOYMENTS_JSON" | jq -r '.value[0].buildCode')
-          echo "CODE=$CODE" >> GITHUB_ENV
-          echo "BUILD_CODE=$BUILD_CODE" >> GITHUB_ENV
+          echo "build code is "
+          echo $BUILD_CODE
+          echo "CODE=${CODE}" >> GITHUB_ENV
+          echo "BUILD_CODE=${BUILD_CODE}" >> GITHUB_ENV
           
      - name: Call Builds API using buildCode
        run: | 
