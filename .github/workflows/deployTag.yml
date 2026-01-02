@@ -19,7 +19,9 @@ jobs:
           
      - name: Call Builds API using buildCode
        run: | 
-         BUILD_JSON=$(curl -s -X GET -H "Authorization: Bearer 6d02d70de338be53dfe9286adb1fee" "https://portalapi.commerce.ondemand.com/v2/subscriptions/c9ef4f6487d4499aa3ea3d9bfd6f4957/builds/$BUILD_CODE" -H 'Content-Type: application/json')
+         echo "Build code is : "
+         echo $BUILD_CODE
+         BUILD_JSON=$(curl -s -X GET -H "Authorization: Bearer 6d02d70de338be53dfe9286adb1fee" "https://portalapi.commerce.ondemand.com/v2/subscriptions/c9ef4f6487d4499aa3ea3d9bfd6f4957/builds/${BUILD_CODE}" -H 'Content-Type: application/json')
          echo $BUILD_JSON
          BUILD_VERSION=$(echo "$BUILDS_JSON" | jq -r '.buildVersion')
          BRANCH=$(echo "$BUILDS_JSON" | jq -r '.branch')
