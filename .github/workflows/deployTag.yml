@@ -10,6 +10,7 @@ jobs:
       auto_deploy_flag: ${{ steps.get_flag.outputs.auto_deploy_flag }}
     steps:
       - name: Get the auto deploy flag
+        id: get_flag
         run: |
           AUTO_DEPLOY_FLAG=${{ vars.AUTO_DEPLOY }}
           echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> GITHUB_ENV
