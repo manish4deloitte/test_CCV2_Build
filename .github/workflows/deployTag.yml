@@ -14,7 +14,7 @@ jobs:
           echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> GITHUB_OUTPUT
   deploy:
     needs: flag_status
-    if: needs.flag_status.outputs.AUTO_DEPLOY_FLAG == 'true'
+    if: needs.flag_status.outputs.AUTO_DEPLOY_FLAG == '"true"'
     runs-on: ubuntu-latest
     steps:
       - name: Call Deployments API and parse the first code and buildCode
