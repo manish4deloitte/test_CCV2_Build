@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       auto_deploy_flag: ${{ steps.get_flag.outputs.auto_deploy_flag }}
+      deploy_time_flag: ${{ steps.check_time.outputs.deploy_time_flag }}
     steps:
       - name: Get the auto deploy flag
         id: get_flag
@@ -15,11 +16,21 @@ jobs:
           AUTO_DEPLOY_FLAG="${{ vars.AUTO_DEPLOY }}"
           echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> $GITHUB_ENV
           echo "auto_deploy_flag=${AUTO_DEPLOY_FLAG}" >> $GITHUB_OUTPUT
+      - name: Check if the time to deploy matches the current time hour
+        id: check_time
+        run: |
+          DEPLOY_HOUR="${{ vars.DEPLOY_HOUR }}"
+          CURRENT_HOUR=$(date -u +%H)
+          if [ "$DEPLOY_HOUR" == "$CURRENT_HOUR" ]; then
+            echo "Current hour matches to Deploy hour"
+            echo "DEPLOY_TIME_FLAG=true" >> $GITHUB_ENV
+            echo "deploy_time_flag=true" >> $GITHUB_OUTPUT
+          fi
 
   deploy:
     needs: flag_status
     runs-on: ubuntu-latest
-    if: needs.flag_status.outputs.auto_deploy_flag == 'true'
+    if: needs.flag_status.outputs.auto_deploy_flag == 'true' && needs.flag_status.outputs.deploy_time_flag == 'true'
     steps:
       - name: Call Deployments API and parse the first code and buildCode
         run: |
