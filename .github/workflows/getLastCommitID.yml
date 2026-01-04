@@ -22,18 +22,11 @@ jobs:
           RESPONSE=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
             "https://api.github.com/repos/${REPO}/commits/${BRANCH}")
           SHA=$(echo "$RESPONSE" | jq -r '.sha')
-          AUTHOR=$(echo "$RESPONSE" | jq -r '.commit.author.name')
-          MESSAGE=$(echo "$RESPONSE" | jq -r '.commit.message')
-          DATE=$(echo "$RESPONSE" | jq -r '.commit.author.date')
+          
           echo "sha=$SHA" >> $GITHUB_OUTPUT
-          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
-          echo "message=$MESSAGE" >> $GITHUB_OUTPUT
-          echo "date=$DATE" >> $GITHUB_OUTPUT
-          echo "Commit: $SHA by $AUTHOR on $DATE: $MESSAGE"
+          echo "Commit: $SHA"
 
       - name: Output the results
         run: |
           echo "SHA: ${{ steps.last_commit.outputs.sha }}"
-          echo "Author: ${{ steps.last_commit.outputs.author }}"
-          echo "Message: ${{ steps.last_commit.outputs.message }}"
-          echo "Date: ${{ steps.last_commit.outputs.date }}"
+          
