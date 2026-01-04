@@ -4,7 +4,15 @@ on:
   workflow_dispatch
 
 jobs:
+  flag_status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the auto deploy flag
+        run: |
+          AUTO_DEPLOY_FLAG=${{ vars.AUTO_DEPLOY }}
+          echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> GITHUB_ENV
   deploy:
+    if: env.AUTO_DEPLOY_FLAG == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Call Deployments API and parse the first code and buildCode
