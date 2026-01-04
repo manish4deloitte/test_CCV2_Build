@@ -12,7 +12,7 @@ jobs:
           AUTO_DEPLOY_FLAG=${{ vars.AUTO_DEPLOY }}
           echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> GITHUB_ENV
   deploy:
-    if: env.AUTO_DEPLOY_FLAG == 'true'
+    if: flag_status.AUTO_DEPLOY_FLAG == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Call Deployments API and parse the first code and buildCode
