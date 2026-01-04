@@ -12,9 +12,10 @@ jobs:
       - name: Get the auto deploy flag
         id: get_flag
         run: |
-          AUTO_DEPLOY_FLAG=${{ vars.AUTO_DEPLOY }}
-          echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> GITHUB_ENV
-          echo "auto_deploy_flag=${AUTO_DEPLOY_FLAG}" >> GITHUB_OUTPUT
+          AUTO_DEPLOY_FLAG="${{ vars.AUTO_DEPLOY }}"
+          echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> $GITHUB_ENV
+          echo "auto_deploy_flag=${AUTO_DEPLOY_FLAG}" >> $GITHUB_OUTPUT
+
   deploy:
     needs: flag_status
     runs-on: ubuntu-latest
