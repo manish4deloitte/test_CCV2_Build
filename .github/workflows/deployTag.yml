@@ -21,6 +21,8 @@ jobs:
         run: |
           DEPLOY_HOUR="${{ vars.DEPLOY_HOUR }}"
           CURRENT_HOUR=$(date -u +%H)
+          echo "Deploy hour : $DEPLOY_HOUR"
+          echo "Current hour : $CURRENT_HOUR"
           if [ "$DEPLOY_HOUR" == "$CURRENT_HOUR" ]; then
             echo "Current hour matches to Deploy hour"
             echo "DEPLOY_TIME_FLAG=true" >> $GITHUB_ENV
