@@ -71,7 +71,7 @@ jobs:
 
   deploy:
     needs: flag_status
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: needs.flag_status.outputs.auto_deploy_flag == 'true' && needs.flag_status.outputs.deploy_time_flag == 'true'
     steps:
       - name: Call Deployments API and parse the first code and buildCode
