@@ -5,7 +5,7 @@ on:
 
 jobs:
   flag_status:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       auto_deploy_flag: ${{ steps.get_flag.outputs.auto_deploy_flag }}
       deploy_time_flag: ${{ steps.check_time.outputs.deploy_time_flag }}
