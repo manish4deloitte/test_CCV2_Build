@@ -10,7 +10,7 @@ on:
 
 jobs:
   last_commit:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Validate branch existence (GitHub API)
         id: validate_branch
