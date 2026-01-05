@@ -61,12 +61,21 @@ jobs:
         run: |
           DEPLOY_HOUR="${{ vars.DEPLOY_HOUR }}"
           CURRENT_HOUR=$(date -u +%H)
-          echo "Deploy hour : $DEPLOY_HOUR"
-          echo "Current hour : $CURRENT_HOUR"
-          if [ "$DEPLOY_HOUR" == "$CURRENT_HOUR" ]; then
+
+          DEPLOY_HOUR_CLEANED=$((10#$DEPLOY_HOUR))
+          CURRENT_HOUR_CLEANED=$((10#$CURRENT_HOUR))
+          
+          echo "Deploy hour : $DEPLOY_HOUR_CLEANED"
+          echo "Current hour : $CURRENT_HOUR_CLEANED"
+          
+          if [ "$DEPLOY_HOUR_CLEANED" -eq "$CURRENT_HOUR_CLEANED" ]; then
             echo "Current hour matches to Deploy hour"
             echo "DEPLOY_TIME_FLAG=true" >> $GITHUB_ENV
             echo "deploy_time_flag=true" >> $GITHUB_OUTPUT
+          else
+            echo "Deploy hour and current hour do not match."
+            echo "DEPLOY_TIME_FLAG=false" >> $GITHUB_ENV
+            echo "deploy_time_flag=false" >> $GITHUB_OUTPUT
           fi
 
   deploy:
