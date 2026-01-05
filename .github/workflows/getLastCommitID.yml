@@ -12,6 +12,21 @@ jobs:
   last_commit:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate branch existence (GitHub API)
+        id: validate_branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.inputs.target_branch }}
+        run: |
+          API_URL="https://api.github.com/repos/${REPO}/branches/${BRANCH}"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $GH_TOKEN" "$API_URL")
+          if [[ "$STATUS" -ne 200 ]]; then
+            echo "Branch '$BRANCH' does not exist in $REPO"
+            exit 1
+          else
+            echo "Branch '$BRANCH' exists in $REPO"
+          fi
       - name: Get last commit for target branch (GitHub API)
         id: last_commit
         env:
