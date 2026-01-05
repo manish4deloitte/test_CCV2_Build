@@ -9,13 +9,48 @@ jobs:
     outputs:
       auto_deploy_flag: ${{ steps.get_flag.outputs.auto_deploy_flag }}
       deploy_time_flag: ${{ steps.check_time.outputs.deploy_time_flag }}
+      last_commit: ${{ steps.last_commit.outputs.sha }}
     steps:
+      - name: Validate branch existence (GitHub API)
+        id: validate_branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.inputs.target_branch }}
+        run: |
+          API_URL="https://api.github.com/repos/${REPO}/branches/${BRANCH}"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $GH_TOKEN" "$API_URL")
+          if [[ "$STATUS" -ne 200 ]]; then
+            echo "Branch '$BRANCH' does not exist in $REPO"
+            exit 1
+          else
+            echo "Branch '$BRANCH' exists in $REPO"
+          fi
+      - name: Get last commit for target branch (GitHub API)
+        id: last_commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.inputs.target_branch }}
+        run: |
+          RESPONSE=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${REPO}/commits/${BRANCH}")
+          SHA=$(echo "$RESPONSE" | jq -r '.sha')
+          
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+          echo "Commit: $SHA"
+
+      - name: Output the results
+        run: |
+          echo "SHA: ${{ steps.last_commit.outputs.sha }}"
+          
       - name: Get the auto deploy flag
         id: get_flag
         run: |
           AUTO_DEPLOY_FLAG="${{ vars.AUTO_DEPLOY }}"
           echo "AUTO_DEPLOY_FLAG=${AUTO_DEPLOY_FLAG}" >> $GITHUB_ENV
           echo "auto_deploy_flag=${AUTO_DEPLOY_FLAG}" >> $GITHUB_OUTPUT
+          
       - name: Check if the time to deploy matches the current time hour
         id: check_time
         run: |
