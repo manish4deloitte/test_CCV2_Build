@@ -1,7 +1,12 @@
 name: Fetch Deployment Commit tag
 
 on: 
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to get the last commit for'
+        required: true
+        default: 'main'
 
 jobs:
   flag_status:
